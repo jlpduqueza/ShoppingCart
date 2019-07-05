@@ -1,0 +1,17 @@
+Serivce and Repo
+	
+	find <- single item
+	
+	find(id) 
+	
+	findByUsernameAndPassword(username, password)
+	
+	/* list of domain */
+	
+	findAll
+	
+	create
+	update
+	delete
+	
+	
