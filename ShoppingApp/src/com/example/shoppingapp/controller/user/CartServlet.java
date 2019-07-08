@@ -19,46 +19,44 @@ import com.example.shoppingapp.services.CartServiceImpl;
 
 @WebServlet("/User/Cart")
 public class CartServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	
-	private CartProductInventoryService cartProductService;
-	private CartService cartService;
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		
-	    cartProductService = new CartProductInventoryServiceImpl();
-	    cartService = new CartServiceImpl();
-	    
-    	HttpSession session=request.getSession();
-    	
-    	User user = (User) session.getAttribute("user");
-	    
-	    try {
-	    	
-			if(cartService.getCartList(user) == null || cartService.getCartList(user).size() == 0) {
-	    	    session.setAttribute("message", "Your cart is empty.");
-	    	    response.sendRedirect("../User/UserHome");
-				return;
-			}
-			request.setAttribute("product_collection", cartProductService.getBeanList(user));
-			request.setAttribute("totalPrice", cartProductService.getTotalPrice(user));
-			
-		} catch (DataException e) {
+    private static final long serialVersionUID = 1L;
+    private CartProductInventoryService cartProductService;
+    private CartService cartService;
 
-			e.printStackTrace();
-		}
+    public CartServlet() {
+        cartProductService = new CartProductInventoryServiceImpl();
+        cartService = new CartServiceImpl();
+    }
 
-	    String jspFile = "/WEB-INF/cart.jsp";
-	    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
+        try {
+            if ((cartService.getCartList(user) == null) || (cartService.getCartList(user).size() == 0)) {
+                session.setAttribute("message", "Your cart is empty.");
+                response.sendRedirect("../User/UserHome");
+
+                return;
+            }
+
+            request.setAttribute("product_collection", cartProductService.getBeanList(user));
+            request.setAttribute("totalPrice", cartProductService.getTotalPrice(user));
+        } catch (DataException e) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        }
+
+        String jspFile = "/WEB-INF/cart.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(jspFile);
-        dispatcher.forward(request,response);	
-	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
+        dispatcher.forward(request, response);
+    }
 
-		doGet(request, response);
-	}
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
+

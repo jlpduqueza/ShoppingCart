@@ -23,77 +23,72 @@ import com.example.shoppingapp.services.ProductServiceImpl;
 
 @WebServlet("/User/Cart/UpdateCart")
 public class UpdateCartServlet extends HttpServlet {
-	
-	private static final long serialVersionUID = 1L;
-	private CartService cartService;				
-	private InventoryService inventoryService;
-	private ProductService productService;
-	private ValidationHelper validationHelper;
+    private static final long serialVersionUID = 1L;
+    private CartService cartService;
+    private InventoryService inventoryService;
+    private ProductService productService;
+    private ValidationHelper validationHelper;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException{
+    public UpdateCartServlet() {
+        cartService = new CartServiceImpl();
+        inventoryService = new InventoryServiceImpl();
+        productService = new ProductServiceImpl();
+        validationHelper = new ValidationHelper();
+    }
 
-		HttpSession session = request.getSession();
-		
-		session.setAttribute("message", "Invalid page access");
-		response.sendRedirect("error-from-filter.jsp");
-	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
-		cartService = new CartServiceImpl();
-		inventoryService = new InventoryServiceImpl();
-		productService = new ProductServiceImpl();
-		validationHelper = new ValidationHelper();
-		
-		
-		System.out.println(request.getParameter("productCode"));
-		
-		HttpSession session=request.getSession();
-		User user = (User) session.getAttribute("user");
-	
-		Product product = null;
-		
-		try {
-			product = productService.getProduct(request.getParameter("productCode"));
-		} catch (DataException e1) {
+        session.setAttribute("message", "Invalid page access");
+        response.sendRedirect("error-from-filter.jsp");
+    }
 
-			e1.printStackTrace();
-		}
-		
-		int quantity = 0;
-		if(validationHelper.isNumeric(request.getParameter("quantity")) == false) {
-			
-    	    session.setAttribute("message", "Invalid quantity input");
-    		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/CartServlet");
-    		dispatcher.forward(request,response);
-		}
-			
-		quantity = Integer.parseInt(request.getParameter("quantity")) ;
-			
-		try {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        Product product = null;
 
-			if(!inventoryService.isStockSufficient(product, quantity)) {
-				session=request.getSession();
-				session.setAttribute("message", "Insufficient stock");
-	    	    response.sendRedirect("../User/Cart");
-				return;
-			}
-			cartService.updateProductInCart(user, product, quantity);
-			
-		} catch (NumberFormatException e) {
+        try {
+            product = productService.getProduct(request.getParameter("productCode"));
+        } catch (DataException e1) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        }
 
-			e.printStackTrace();
-			
-		} catch (DataException e) {
+        int quantity = 0;
 
-			e.printStackTrace();
-		}
-			
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/User/Cart");
-		dispatcher.forward(request,response);
-			
-	}
+        if (validationHelper.isNumeric(request.getParameter("quantity")) == false) {
+            session.setAttribute("message", "Invalid quantity input");
 
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/CartServlet");
+
+            dispatcher.forward(request, response);
+        }
+
+        quantity = Integer.parseInt(request.getParameter("quantity"));
+
+        try {
+            if (!inventoryService.isStockSufficient(product, quantity)) {
+                session = request.getSession();
+                session.setAttribute("message", "Insufficient stock");
+                response.sendRedirect("../User/Cart");
+
+                return;
+            }
+
+            cartService.updateProductInCart(user, product, quantity);
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        } catch (DataException e) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        }
+
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/User/Cart");
+
+        dispatcher.forward(request, response);
+    }
 }

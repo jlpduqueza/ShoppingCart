@@ -6,10 +6,11 @@
    <head>
       <meta charset="UTF-8">
       <title>Insert title here</title>
-      
    </head>
    <body>
-      <h3><c:out value = "${productName}"/></h3>
+      <h3>
+         <c:out value = "${productName}"/>
+      </h3>
       <c:out value = "${message}"/>
       <form action="AddCart" method = "POST">
          Quantity (between 1 and ${ quantity}): 

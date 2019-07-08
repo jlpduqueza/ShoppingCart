@@ -1,6 +1,7 @@
 package com.example.shoppingapp.filter;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,30 +18,27 @@ import com.example.shoppingapp.services.InventoryServiceImpl;
 
 @WebFilter("/User/UserHome")
 public class UserHomeFilter implements Filter {
+    private InventoryService inventoryService;
 
-	private InventoryService inventoryService;
-	
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
-			throws IOException, ServletException {
-		
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
-		HttpSession session=req.getSession();
-		
-		inventoryService = new InventoryServiceImpl();
-		
-		try {
-			if(inventoryService.getInventoryListForUser().isEmpty()) {
-				session.setAttribute("message", "Cannot fetch inventory");
-				res.sendRedirect("error-from-filter.jsp");
-				return;
-			}
-		} catch (DataException e) {
+    public UserHomeFilter() {
+        inventoryService = new InventoryServiceImpl();
+    }
 
-		}
-		
-		chain.doFilter(request, response);
-	}
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+        HttpSession session = req.getSession();
 
+        try {
+            if (inventoryService.getInventoryListForUser().isEmpty()) {
+                session.setAttribute("message", "Cannot fetch inventory");
+                res.sendRedirect("error-from-filter.jsp");
 
+                return;
+            }
+        } catch (DataException e) {}
+
+        chain.doFilter(request, response);
+    }
 }

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-
 <!DOCTYPE html>
 <html>
    <head>
@@ -16,7 +15,7 @@
             <th>Price</th>
             <th>Quantity</th>
             <th>Action</th>
-         <c:forEach var="inventoryProduct" items="${product_collection}">
+            <c:forEach var="inventoryProduct" items="${product_collection}">
          <tr>
          <td>${inventoryProduct.product.productDescription}</td>
          <td>&#8369;${inventoryProduct.product.price}</td>
@@ -30,21 +29,18 @@
          <c:set var="message" value="" scope="session"/>
       </table>
       <a href="../Logout" id="test">Log-out</a>
-      
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
-      
-      $(document).ready(function() {
-
-    	    $('#example tr').click(function() {
-    	        var href = $(this).find("a").attr("href");
-    	        if(href) {
-    	            window.location = href;
-    	        }
-    	    });
-
-    	});
-      
+         $(document).ready(function() {
+         
+            $('#example tr').click(function() {
+                var href = $(this).find("a").attr("href");
+                if(href) {
+                    window.location = href;
+                }
+            });
+         
+         });
+         
       </script>
-      
    </body>
 </html>

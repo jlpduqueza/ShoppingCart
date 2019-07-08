@@ -1,6 +1,7 @@
 package com.example.shoppingapp.controller.user;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,34 +19,34 @@ import com.example.shoppingapp.services.ProductServiceImpl;
 
 @WebServlet("/User/Cart/DeleteCart")
 public class RemoveProductInCartServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private CartService cartService;
-	private ProductService productService;
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		
-		cartService = new CartServiceImpl();
-		productService = new ProductServiceImpl();
-		
-		HttpSession session=request.getSession();
-		User user = (User) session.getAttribute("user");
-		
-		try {
+    private static final long serialVersionUID = 1L;
+    private CartService cartService;
+    private ProductService productService;
 
-			Product product = productService.getProduct(request.getParameter("productCode"));
-			cartService.deleteProductInCart(user, product);
-		} catch (DataException e) {
+    public RemoveProductInCartServlet() {
+        cartService = new CartServiceImpl();
+        productService = new ProductServiceImpl();
+    }
 
-			e.printStackTrace();
-		}
-		response.sendRedirect("../UserHome");
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
+        try {
+            Product product = productService.getProduct(request.getParameter("productCode"));
 
-		doGet(request, response);
-	}
+            cartService.deleteProductInCart(user, product);
+        } catch (DataException e) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        }
 
+        response.sendRedirect("../UserHome");
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 }

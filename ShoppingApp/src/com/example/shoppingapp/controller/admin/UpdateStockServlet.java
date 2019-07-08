@@ -1,6 +1,7 @@
 package com.example.shoppingapp.controller.admin;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,59 +19,55 @@ import com.example.shoppingapp.services.ProductServiceImpl;
 
 @WebServlet("/Admin/Stock/UpdateStock")
 public class UpdateStockServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	
+    private static final long serialVersionUID = 1L;
     private InventoryService inventoryService;
     private ProductService productService;
     private ValidationHelper validationHelper;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public UpdateStockServlet() {
+        inventoryService = new InventoryServiceImpl();
+        productService = new ProductServiceImpl();
+        validationHelper = new ValidationHelper();
+    }
 
-		HttpSession session = request.getSession();
-		
-		session.setAttribute("message", "Invalid page access");
-		response.sendRedirect("error-from-filter.jsp");
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		
-		inventoryService = new InventoryServiceImpl();
-		productService = new ProductServiceImpl();
-		validationHelper = new ValidationHelper();
-		
-		String productCode = request.getParameter("productCode");
-		
-		Product product = null;
-		
-		try {
-			product = productService.getProduct(productCode);
-		} catch (DataException e1) {
-			
-			e1.printStackTrace();
-		}
-		
-		if(validationHelper.isNumeric(request.getParameter("quantity")) == false) {
-			
-			HttpSession session=request.getSession();
-			session.setAttribute("message", "Invalid stock input");
-			response.sendRedirect("/ShoppingApp/Admin/AdminHome");
-		}
-		
-		int quantity = Integer.parseInt(request.getParameter("quantity")) ;
-		
-		try {
-			inventoryService.updateProductQuantity(product, quantity);
-			HttpSession session = request.getSession();
-			
-			session.setAttribute("message", "Stock is successfully added");
-		} catch (DataException e) {
+        session.setAttribute("message", "Invalid page access");
+        response.sendRedirect("error-from-filter.jsp");
+    }
 
-			e.printStackTrace();
-		}
-		
-		response.sendRedirect("/ShoppingApp/Admin/AdminHome");
-		
-	}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String productCode = request.getParameter("productCode");
+        Product product = null;
+        HttpSession session = request.getSession();
 
+        try {
+            product = productService.getProduct(productCode);
+        } catch (DataException e) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        }
+
+        if (validationHelper.isNumeric(request.getParameter("quantity")) == false) {
+            session.setAttribute("message", "Invalid stock input");
+            response.sendRedirect("/ShoppingApp/Admin/AdminHome");
+        }
+
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+        try {
+            inventoryService.updateProductQuantity(product, quantity);
+            session.setAttribute("message", "Stock is successfully added");
+        } catch (DataException e) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        }
+
+        response.sendRedirect("/ShoppingApp/Admin/AdminHome");
+    }
 }
+
+

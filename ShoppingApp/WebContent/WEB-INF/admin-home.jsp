@@ -5,18 +5,17 @@
    <head>
       <meta charset="UTF-8">
       <title>Insert title here</title>
-
    </head>
    <body>
       <h1>Hello ${username}!</h1>
-       <c:out value = "${message}"/>
+      <c:out value = "${message}"/>
       <table id="example">
          <tr>
             <th>Products</th>
             <th>Price</th>
             <th>Quantity</th>
             <th>Action</th>
-         <c:forEach var="inventoryProduct" items="${product_collection}">
+            <c:forEach var="inventoryProduct" items="${product_collection}">
          <tr>
          <td>
          ${inventoryProduct.product.productDescription}
@@ -32,21 +31,19 @@
          </tr>
          </c:forEach>
       </table>
-
       <c:set var="message" value="" scope="session"/>
       <a href="../Logout" id="test">Log-out</a>
    </body>
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
-      
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
       $(document).ready(function() {
-
-    	    $('#example tr').click(function() {
-    	        var href = $(this).find("a").attr("href");
-    	        if(href) {
-    	            window.location = href;
-    	        }
-    	    });
-
-    	});
-      </script>
+      
+         $('#example tr').click(function() {
+             var href = $(this).find("a").attr("href");
+             if(href) {
+                 window.location = href;
+             }
+         });
+      
+      });
+   </script>
 </html>

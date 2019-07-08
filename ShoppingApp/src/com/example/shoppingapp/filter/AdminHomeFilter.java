@@ -1,6 +1,7 @@
 package com.example.shoppingapp.filter;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,31 +18,28 @@ import com.example.shoppingapp.services.InventoryServiceImpl;
 
 @WebFilter("/Admin/AdminHome")
 public class AdminHomeFilter implements Filter {
+    private InventoryService inventoryService;
 
-	private InventoryService inventoryService;
-	
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
-			throws IOException, ServletException {
+    public AdminHomeFilter() {
+        inventoryService = new InventoryServiceImpl();
+    }
 
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
-		HttpSession session=req.getSession();
-		
-		inventoryService = new InventoryServiceImpl();
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+        HttpSession session = req.getSession();
 
-		try {
-			
-			if(inventoryService.getInventoryList().isEmpty()) {
-				session.setAttribute("message", "Inventory list is not available");
-				res.sendRedirect("error-from-filter.jsp");
-				return;
-			}
-		} catch (DataException e) {
+        try {
+            if (inventoryService.getInventoryList().isEmpty()) {
+                session.setAttribute("message", "Inventory list is not available");
+                res.sendRedirect("error-from-filter.jsp");
 
-		}
-		
-		chain.doFilter(request, response);
-	}
+                return;
+            }
+        } catch (DataException e) {}
 
-
+        chain.doFilter(request, response);
+    }
 }
+

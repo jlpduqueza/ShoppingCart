@@ -6,7 +6,6 @@
    <head>
       <meta charset="UTF-8">
       <title>Insert title here</title>
-
    </head>
    <body>
       <h3>${productName}</h3>
@@ -18,7 +17,6 @@
          <input type="submit" value = "Update" onclick="javascript: form.action='UpdateStock';" >
       </form>
       <br>
-
       <c:set var="message" value="" scope="session"/>
       <br>
       <a href="/ShoppingApp/Admin/AdminHome">Go back</a>

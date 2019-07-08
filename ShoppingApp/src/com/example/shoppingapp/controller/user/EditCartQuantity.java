@@ -22,59 +22,53 @@ import com.example.shoppingapp.services.ProductServiceImpl;
 
 @WebServlet("/User/Cart/EditCartQuantity")
 public class EditCartQuantity extends HttpServlet {
-	
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private CartService cartService;
+    private ProductService productService;
+    private InventoryService inventoryService;
 
-	private CartService cartService;
-	private ProductService productService;
-	private InventoryService inventoryService;
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		cartService = new CartServiceImpl();
-		productService = new ProductServiceImpl();
-		inventoryService = new InventoryServiceImpl();
-		
-	    HttpSession session=request.getSession();
-    	User user = (User) session.getAttribute("user");
+    public EditCartQuantity() {
+        cartService = new CartServiceImpl();
+        productService = new ProductServiceImpl();
+        inventoryService = new InventoryServiceImpl();
+    }
 
-	    String productCode = "";
-	    
-    	if(request.getParameter("productCode") != null) {
-    		productCode = request.getParameter("productCode");
-    		session.setAttribute("productCode", productCode);
-	    }
-	    
-	    else if(session.getAttribute("productCode") != null) {
-	    	productCode = session.getAttribute("productCode").toString();
-	    	
-	    }
-    	
-    	try {
-    		Product product = productService.getProduct(productCode);
-    		
-	    	CartEntry cartEntry = cartService.getCartEntry(user, product);
-	    	
-	    	if(cartEntry == null) {
-	    		
-	    		session.setAttribute("message", "Invalid page access");
-				return;
-	    	}
-	    	
-			int quantityFromStock = inventoryService.getInventory(productCode).getQuantity();
-			
-			request.setAttribute("quantityFromStock", quantityFromStock);
-			
-			request.getRequestDispatcher("/WEB-INF/edit-cart-quantity.jsp").forward(request,response);
-			
-		} catch (DataException e) {
-			e.printStackTrace();
-		}
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        String productCode = "";
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getParameter("productCode") != null) {
+            productCode = request.getParameter("productCode");
+            session.setAttribute("productCode", productCode);
+        } else if (session.getAttribute("productCode") != null) {
+            productCode = session.getAttribute("productCode").toString();
+        }
 
-		doGet(request, response);
-	}
+        try {
+            Product product = productService.getProduct(productCode);
+            CartEntry cartEntry = cartService.getCartEntry(user, product);
 
+            if (cartEntry == null) {
+                session.setAttribute("message", "Invalid page access");
+
+                return;
+            }
+
+            int quantityFromStock = inventoryService.getInventory(productCode).getQuantity();
+
+            request.setAttribute("quantityFromStock", quantityFromStock);
+            request.getRequestDispatcher("/WEB-INF/edit-cart-quantity.jsp").forward(request, response);
+        } catch (DataException e) {
+            session.setAttribute("message", "Invalid Page Access");
+            response.sendRedirect("error-from-filter.jsp");
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
+

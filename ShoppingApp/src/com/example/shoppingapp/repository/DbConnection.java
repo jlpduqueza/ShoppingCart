@@ -5,5 +5,6 @@ import java.sql.Connection;
 import com.example.shoppingapp.exception.DataException;
 
 public interface DbConnection {
-	public Connection getConnection() throws DataException;
+    public Connection getConnection() throws DataException;
 }
+

@@ -1,6 +1,7 @@
 package com.example.shoppingapp.filter;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,36 +19,33 @@ import com.example.shoppingapp.services.UserServiceImpl;
 
 @WebFilter("/User/*")
 public class UserFilter implements Filter {
+    private UserService userService;
 
-	private UserService userService;
-	
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
-		userService = new UserServiceImpl();
-		
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
-		HttpSession session=req.getSession();
-		
-		User user = (User) session.getAttribute("user");
-		
-		try {
+    public UserFilter() {
+        userService = new UserServiceImpl();
+    }
 
-			if(userService.isAdmin(user)) {
-				
-				session.setAttribute("message", "Please log-in as user");
-				res.sendRedirect("error-from-filter.jsp");
-				return;
-			}
-			
-		} catch (DataException e) {
-			
-			session.setAttribute("message", "Page not found.");
-			res.sendRedirect("error-from-filter.jsp");
-			return;
-		}
-		
-		chain.doFilter(request, response);
-	}
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
 
+        try {
+            if (userService.isAdmin(user)) {
+                session.setAttribute("message", "Please log-in as user");
+                res.sendRedirect("error-from-filter.jsp");
+
+                return;
+            }
+        } catch (DataException e) {
+            session.setAttribute("message", "Page not found.");
+            res.sendRedirect("error-from-filter.jsp");
+
+            return;
+        }
+
+        chain.doFilter(request, response);
+    }
 }
