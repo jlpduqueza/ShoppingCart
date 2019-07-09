@@ -8,7 +8,7 @@
       <title>Insert title here</title>
    </head>
    <body>
-      ${message}
+      <c:out value = "${message}"/>
       <c:set var="message" value="" scope="session"/>
       <br>
       <button onclick="goBack()">Go to previous page</button>

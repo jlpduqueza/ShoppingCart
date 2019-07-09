@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isAdmin(User tempUser) throws DataException {
-        if (isUser(tempUser)) {
+        if (isUserByUsernamePassword(tempUser.getUsername(), tempUser.getPassword())) {
             User user = getUser(tempUser.getUsername());
 
             if (user.getRole().equals("admin")) {
@@ -33,16 +33,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUser(User tempUser) throws DataException {
+    public boolean isUserByUsernamePassword(String username, String password) throws DataException {
         boolean loggedInState = false;
-        User user = userRepository.getUser(tempUser.getUsername());
-
-        if (tempUser.getUsername() != null) {
-            if (user.getUsername().equals(tempUser.getUsername())
-                    && user.getPassword().equals(tempUser.getPassword())) {
+        User user = userRepository.getUser(username);
+            if (user.getUsername().equals(username)
+                    && user.getPassword().equals(password)) {
                 loggedInState = true;
             }
-        }
 
         return loggedInState;
     }

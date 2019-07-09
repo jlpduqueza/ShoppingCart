@@ -8,7 +8,7 @@
       <title>Insert title here</title>
    </head>
    <body>
-      <h3>${productName}</h3>
+      <h3><c:out value = "${productName}"/></h3>
       <c:out value = "${message}"/>
       <form action="EditStock" method = "POST">
          <input type="number" min="0" name="quantity" value ="${quantityFromStock}" >

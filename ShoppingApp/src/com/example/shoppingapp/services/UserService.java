@@ -10,7 +10,7 @@ public interface UserService {
 
     public User getUser(String username) throws DataException;
 
-    public boolean isUser(User user) throws DataException;
+    public boolean isUserByUsernamePassword(String username, String password) throws DataException;
 
     public List<User> getUserList() throws DataException;
 }

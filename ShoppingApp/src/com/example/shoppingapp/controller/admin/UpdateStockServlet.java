@@ -51,7 +51,7 @@ public class UpdateStockServlet extends HttpServlet {
             response.sendRedirect("error-from-filter.jsp");
         }
 
-        if (validationHelper.isNumeric(request.getParameter("quantity")) == false) {
+        if (!validationHelper.isNumeric(request.getParameter("quantity"))) {
             session.setAttribute("message", "Invalid stock input");
             response.sendRedirect("/ShoppingApp/Admin/AdminHome");
         }

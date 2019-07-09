@@ -66,7 +66,7 @@ public class AddToCartServlet extends HttpServlet {
             response.sendRedirect("error-from-filter.jsp");
         }
 
-        if (validationHelper.isNumeric(request.getParameter("quantityToAddInCart")) == false) {
+        if (!validationHelper.isNumeric(request.getParameter("quantityToAddInCart"))) {
             session.setAttribute("message", "Invalid quantity input");
             response.sendRedirect("/ShoppingApp/User/Add/ViewAdd");
 

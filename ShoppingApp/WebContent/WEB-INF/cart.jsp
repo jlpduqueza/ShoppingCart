@@ -18,28 +18,16 @@
             <c:forEach var="cartProduct" items="${product_collection}">
          <tr>
          <td>
-         ${cartProduct.product.productDescription}
+         <c:out value = "${cartProduct.product.productDescription}"/>
          </td>
          <td>
-         &#8369; ${cartProduct.product.price}
+         &#8369; <c:out value = "${cartProduct.product.price}"/>
          </td>
          <td>
-         ${cartProduct.inventoryEntry.quantity}
+         <c:out value = "${cartProduct.inventoryEntry.quantity}"/>
          <td>
-         ${cartProduct.cartEntry.quantityInCart}
+         <c:out value = "${cartProduct.cartEntry.quantityInCart}"/>
          </td>
-         <%--          <td>
-            <input type="number" name="quantity" value = "<%=product.getQuantity()%>" min="1" max="<%=cartService.getActualQuantity(product.getProduct_code())%>">
-            
-            </td> --%>
-         <%--          <td>
-            <input type="hidden" name="username" value = " ${username}">
-            <input type="hidden" name="productCode" value = "${cartProduct.product.productCode}">
-            <input type="hidden" name="quantity" value = " ${cartProduct.cartEntry.quantityInCart}">
-            <input type="hidden" name="initialPrice" value = "${initialPrice}">
-            <input type="Submit" value = "Save" >
-            </td>
-            </form>  --%>
          <td>	
          <a href="/ShoppingApp/User/Cart/DeleteCart?productCode=${cartProduct.product.productCode}">Delete</a> 
          <a href="/ShoppingApp/User/Cart/EditCartQuantity?productCode=${cartProduct.product.productCode}">Edit</a> 

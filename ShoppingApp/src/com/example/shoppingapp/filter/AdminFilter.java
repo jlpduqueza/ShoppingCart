@@ -33,7 +33,7 @@ public class AdminFilter implements Filter {
         User user = (User) session.getAttribute("user");
 
         try {
-            if (userService.isAdmin(user) == false) {
+            if (!userService.isAdmin(user)) {
                 session.setAttribute("message", "Non-Admin accounts cant access this page");
                 res.sendRedirect("error-from-filter.jsp");
 

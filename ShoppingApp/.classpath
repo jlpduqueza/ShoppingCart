@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="/home/training-lee/Downloads/apache-tomcat-9.0.21/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.47-bin.jar"/>
 	<classpathentry kind="lib" path="/home/training-lee/Downloads/apache-tomcat-9.0.21/lib/catalina.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

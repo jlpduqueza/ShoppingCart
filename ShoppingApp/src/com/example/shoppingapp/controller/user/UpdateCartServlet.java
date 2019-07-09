@@ -59,7 +59,7 @@ public class UpdateCartServlet extends HttpServlet {
 
         int quantity = 0;
 
-        if (validationHelper.isNumeric(request.getParameter("quantity")) == false) {
+        if (!validationHelper.isNumeric(request.getParameter("quantity"))) {
             session.setAttribute("message", "Invalid quantity input");
 
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/CartServlet");

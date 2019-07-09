@@ -30,33 +30,22 @@ public class UserLoginServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         userService = new UserServiceImpl();
 
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession();
 
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
         session.setAttribute("message", "");
 
-        if ((request.getParameter("username") == null) && (request.getParameter("password") == null)) {
+        if ((username == null) && (password == null)) {
             session.setAttribute("message", "Please fill the username and password field.");
             response.sendRedirect("Login");
 
             return;
         }
-
-        if (request.getParameter("username").matches("[^a-zA-Z0-9]")) {
-            session.setAttribute("message", "Username required alphanumeric input.");
-            response.sendRedirect("Login");
-
-            return;
-        }
-
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        User tempUser = new User();
-
-        tempUser.setUsername(username);
-        tempUser.setPassword(password);
-
+        
         try {
-            if (userService.isUser(tempUser) == false) {
+            if (!userService.isUserByUsernamePassword(username, password)) {
                 session.setAttribute("message", "Account does not exist.");
                 response.sendRedirect("Login");
 
@@ -65,8 +54,10 @@ public class UserLoginServlet extends HttpServlet {
 
             session = request.getSession(true);
             session.setAttribute("user", userService.getUser(username));
-
-            if (userService.isAdmin(tempUser)) {
+            
+            User user = (User) session.getAttribute("user");
+            
+            if (userService.isAdmin(user)) {
                 response.sendRedirect("Admin/AdminHome");
             } else {
                 response.sendRedirect("User/UserHome");

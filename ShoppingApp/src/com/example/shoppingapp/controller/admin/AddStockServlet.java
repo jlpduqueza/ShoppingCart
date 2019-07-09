@@ -52,7 +52,7 @@ public class AddStockServlet extends HttpServlet {
             response.sendRedirect("error-from-filter.jsp");
         }
 
-        if (validationHelper.isNumeric(request.getParameter("quantity")) == false) {
+        if (!validationHelper.isNumeric(request.getParameter("quantity"))) {
             HttpSession session = request.getSession();
 
             session.setAttribute("message", "Invalid stock input");

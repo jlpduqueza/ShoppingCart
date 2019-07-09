@@ -7,7 +7,7 @@
       <title>Insert title here</title>
    </head>
    <body>
-      <h1>Hello ${username}!</h1>
+      <h1>Hello <c:out value = "${username}"/>!</h1>
       <a href="Cart">CART</a>
       <table id="example">
          <tr>
@@ -17,9 +17,9 @@
             <th>Action</th>
             <c:forEach var="inventoryProduct" items="${product_collection}">
          <tr>
-         <td>${inventoryProduct.product.productDescription}</td>
-         <td>&#8369;${inventoryProduct.product.price}</td>
-         <td>${inventoryProduct.quantity}</td>
+         <td><c:out value = "${inventoryProduct.product.productDescription}"/></td>
+         <td>&#8369;<c:out value = "${inventoryProduct.product.price}"/></td>
+         <td><c:out value = "${inventoryProduct.quantity}"/></td>
          <td>	
          <a href="/ShoppingApp/User/Add/ViewAdd?productCode=${inventoryProduct.product.productCode}">Add To Cart</a>
          </td>	
